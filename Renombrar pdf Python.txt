@@ -1,0 +1,137 @@
+import re
+
+def obtener_codigo(texto):
+    """Obtiene el código después de 'Fwd:' del texto"""
+    patron = r'Asunto: (\w+-\d+-\d+)'
+    coincidencias = re.search(patron, texto)
+    if coincidencias:
+        codigo = coincidencias.group(1)
+        return codigo.strip()
+    return None
+
+
+import os
+from tkinter import filedialog
+import PyPDF2
+import re
+
+def reemplazar_caracteres_no_permitidos(cadena):
+    """Reemplaza los caracteres no permitidos en el nombre del archivo"""
+    caracteres_no_permitidos = r'[^a-zA-Z0-9_\-. ]'
+    return re.sub(caracteres_no_permitidos, '_', cadena)
+
+root = filedialog.Tk()
+root.directory = filedialog.askdirectory()
+route = root.directory+'/'
+
+certificados = [file for file in os.listdir(route) if file.endswith('.pdf')]
+
+for certificado in certificados:
+    try:
+        pdfFileObject = open(route + certificado, 'rb')
+        pdfReader = PyPDF2.PdfReader(pdfFileObject)
+        pageObject = pdfReader.pages[0]
+        text = pageObject.extract_text()
+        accountNumber = obtener_codigo(text)
+        if accountNumber:
+            accountNumber = reemplazar_caracteres_no_permitidos(accountNumber)
+            pdfFileObject.close()
+
+            new_name = route + accountNumber + '.pdf'
+            if os.path.exists(new_name):
+                print(f'El archivo {new_name} ya existe.')
+            else:
+                os.rename(route + certificado, new_name)
+                print(f'Renombrado {certificado} a {new_name}')
+        else:
+            print(f'No se encontró número de cuenta en {certificado}')
+    except Exception as e:
+        print(f'Ocurrió un error al procesar {certificado}: {str(e)}')
+
+
+
+
+que signirica este codigo 
+def obtener_codigo(texto):
+    """Obtiene el código después de 'Fwd:' del texto"""
+    patron = r'Asunto: (\w+-\d+-\d+)'
+    coincidencias = re.search(patron, texto)
+    if coincidencias:
+        codigo = coincidencias.group(1)
+        return codigo.strip()
+    return None
+ChatGPT
+El código que has proporcionado es una función en Python llamada obtener_codigo que toma un argumento texto y busca un patrón específico en ese texto utilizando expresiones regulares. Su objetivo es encontrar un código que sigue el patrón especificado en el texto y devolverlo.
+
+A continuación, se describen los pasos principales de la función:
+
+Se define una función llamada obtener_codigo que toma un argumento llamado texto.
+
+Dentro de la función, se define una cadena de texto llamada patron que contiene una expresión regular. La expresión regular es: Asunto: (\w+-\d+-\d+). Esta expresión regular busca una cadena que comience con "Asunto:" seguido de un espacio, y luego captura un patrón que consiste en palabras (\w+), un guion (-), números (\d+), otro guion (-) y más números (\d+). Este patrón capturado se encuentra entre paréntesis y se almacena en un grupo.
+
+Luego, se utiliza la función re.search(patron, texto) para buscar el patrón en el texto proporcionado como argumento. re.search busca la primera coincidencia del patrón en el texto.
+
+Si se encuentra una coincidencia, se extrae el código capturado (el valor entre paréntesis en el patrón) utilizando coincidencias.group(1). Luego, se utiliza .strip() para eliminar cualquier espacio en blanco adicional alrededor del código.
+
+Finalmente, el código encontrado se devuelve como resultado de la función. Si no se encuentra ninguna coincidencia, la función devuelve None.
+
+En resumen, esta función se utiliza para extraer un código específico que sigue un patrón determinado desde el texto proporcionado. El código debe estar precedido por "Asunto:" en el texto, y la función devuelve el código encontrado o None si no se encuentra ningún código.
+
+y estos def reemplazar_caracteres_no_permitidos(cadena):
+    """Reemplaza los caracteres no permitidos en el nombre del archivo"""
+    caracteres_no_permitidos = r'[^a-zA-Z0-9_\-. ]'
+    return re.sub(caracteres_no_permitidos, '_', cadena)
+
+root = filedialog.Tk()
+root.directory = filedialog.askdirectory()
+route = root.directory+'/'
+
+certificados = [file for file in os.listdir(route) if file.endswith('.pdf')]
+ChatGPT
+El código que has proporcionado realiza algunas operaciones relacionadas con la manipulación de nombres de archivos en Python. Aquí está una descripción de las partes clave:
+
+Función reemplazar_caracteres_no_permitidos: Esta función toma una cadena cadena como entrada y reemplaza los caracteres no permitidos en el nombre del archivo con guiones bajos (_). El patrón de caracteres no permitidos está definido en la variable caracteres_no_permitidos, que es una expresión regular ([^a-zA-Z0-9_\-. ]). Esta expresión regular coincide con cualquier carácter que no sea una letra mayúscula o minúscula, un número, guión bajo (_), guión (-) o espacio en blanco. La función re.sub se utiliza para reemplazar todos estos caracteres no permitidos en la cadena con guiones bajos y devuelve la cadena modificada.
+
+Creación de una ventana de diálogo para seleccionar una carpeta: El código crea una ventana de diálogo de selección de carpeta utilizando filedialog.Tk() y luego llama a filedialog.askdirectory() para permitir al usuario seleccionar una carpeta. La ruta de la carpeta seleccionada se almacena en root.directory.
+
+Obtención de una lista de archivos PDF en la carpeta seleccionada: El código utiliza la biblioteca os para obtener una lista de nombres de archivos en la carpeta seleccionada (route). Luego, filtra esta lista para incluir solo los archivos que terminan con la extensión ".pdf". Los nombres de estos archivos PDF se almacenan en la lista certificados.
+
+En resumen, este código se utiliza para realizar las siguientes acciones:
+
+Reemplazar los caracteres no permitidos en nombres de archivos en una cadena con guiones bajos.
+Permitir al usuario seleccionar una carpeta a través de una ventana de diálogo.
+Obtener una lista de archivos PDF en la carpeta seleccionada.
+for certificado in certificados:
+    try:
+        pdfFileObject = open(route + certificado, 'rb')
+        pdfReader = PyPDF2.PdfReader(pdfFileObject)
+        pageObject = pdfReader.pages[0]
+        text = pageObject.extract_text()
+        accountNumber = obtener_codigo(text)
+        if accountNumber:
+            accountNumber = reemplazar_caracteres_no_permitidos(accountNumber)
+            pdfFileObject.close()
+
+            new_name = route + accountNumber + '.pdf'
+            if os.path.exists(new_name):
+                print(f'El archivo {new_name} ya existe.')
+            else:
+                os.rename(route + certificado, new_name)
+                print(f'Renombrado {certificado} a {new_name}')
+        else:
+            print(f'No se encontró número de cuenta en {certificado}')
+    except Exception as e:
+        print(f'Ocurrió un error al procesar {certificado}: {str(e)}')
+ChatGPT
+Este fragmento de código es un bucle que itera a través de la lista de nombres de archivos PDF almacenados en la variable certificados. Para cada archivo PDF, realiza las siguientes acciones:
+
+Abre el archivo PDF en modo de lectura binaria ('rb') utilizando la biblioteca PyPDF2.
+Lee la primera página del PDF.
+Extrae el texto de la página utilizando pageObject.extract_text().
+Llama a la función obtener_codigo(text) para intentar encontrar un código en el texto extraído. Este código se almacena en la variable accountNumber.
+Si se encuentra un código válido, se llama a la función reemplazar_caracteres_no_permitidos(accountNumber) para reemplazar caracteres no permitidos en el código.
+Cierra el archivo PDF.
+Define un nuevo nombre de archivo (new_name) basado en el código encontrado y la extensión ".pdf".
+Verifica si ya existe un archivo con el nuevo nombre. Si existe, muestra un mensaje indicando que el archivo ya existe. Si no existe, renombra el archivo PDF original con el nuevo nombre y muestra un mensaje indicando que se ha renombrado.
+Si no se encuentra un código en el PDF original, muestra un mensaje indicando que no se encontró un número de cuenta en el archivo.
+Si ocurre alguna excepción durante el proceso, se captura la excepción y se muestra un mensaje de error 
